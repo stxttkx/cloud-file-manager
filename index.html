@@ -120,38 +120,12 @@
 <div class="toast" id="toast">已复制链接</div>
 
 <script>
-/* ============ 数据源 ============
-   部署到 Cloudflare Pages 时，把 DATA 换成 fetch('/api/files') 即可。
-*/
-const DATA = [
-  {
-    id: 1,
-    name: "2026 前端工程化实战.pdf",
-    cover: "https://picsum.photos/seed/frontend/160/220",
-    size: "17.6 MB",
-    type: "pdf",
-    tags: ["前端", "工程化"],
-    remark: "内部培训资料",
-    updated_at: "2026-09-28",
-    platforms: [
-      { name: "百度网盘", color: "#2563eb", url: "https://pan.baidu.com/s/xxxx" },
-      { name: "阿里云盘", color: "#2563eb", url: "https://www.alipan.com/s/xxxx" }
-    ]
-  },
-  {
-    id: 2,
-    name: "设计系统 Figma 源文件.fig",
-    cover: "https://picsum.photos/seed/design/160/220",
-    size: "50.0 MB",
-    type: "fig",
-    tags: ["设计", "组件库"],
-    remark: "含暗色主题",
-    updated_at: "2026-09-20",
-    platforms: [
-      { name: "夸克网盘", color: "#2563eb", url: "https://pan.quark.cn/s/xxxx" }
-    ]
-  }
-];
+/* ============ 数据源 ============ */
+
+  let DATA = [];
+  const res = await fetch("/api/files");
+  DATA = await res.json();
+  render(DATA);
 
 /* ============ 渲染 ============ */
 const listEl = document.getElementById("list");
