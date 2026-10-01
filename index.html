@@ -120,17 +120,13 @@
 <div class="toast" id="toast">已复制链接</div>
 
 <script>
-/* ============ 数据源 ============ */
-
-  let DATA = [];
-  const res = await fetch("/api/files");
-  DATA = await res.json();
-  render(DATA);
-
-/* ============ 渲染 ============ */
+/* ============ 全局状态 & DOM 引用 ============ */
+let DATA = [];
 const listEl = document.getElementById("list");
 const searchEl = document.getElementById("search");
+const toast = document.getElementById("toast");
 
+/* ============ 工具函数 ============ */
 function escapeHtml(s){
   return String(s ?? "").replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
@@ -142,6 +138,7 @@ function typeLabel(t){
   return map[(t||"file").toLowerCase()] || (t||"FILE").toUpperCase().slice(0,4);
 }
 
+/* ============ 渲染 ============ */
 function render(items){
   if(!items.length){
     listEl.innerHTML = `<div class="empty">没有匹配的文件</div>`;
@@ -181,7 +178,6 @@ function render(items){
 }
 
 /* ============ 复制 ============ */
-const toast = document.getElementById("toast");
 let toastTimer;
 function showToast(msg){
   toast.textContent = msg;
@@ -236,7 +232,18 @@ function filter(keyword){
 
 searchEl.addEventListener("input", e => filter(e.target.value));
 
-render(DATA);
+/* ============ 初始化 ============ */
+(async function init(){
+  try{
+    const res = await fetch("/api/files");
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    DATA = await res.json();
+  }catch(e){
+    console.error("加载失败", e);
+    DATA = [];
+  }
+  render(DATA);
+})();
 </script>
 </body>
 </html>
